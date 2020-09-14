@@ -1,0 +1,36 @@
+.form {
+    overflow-y: scroll;
+}
+
+.btnGroup {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    justify-content: center;
+    padding: 10px;
+}
+
+::v-deep .ant-form {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: wrap;
+
+    .ant-form-item {
+        width: 50% !important;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .blockRow {
+        // position: absolute;
+        // left: 10px;
+        padding-left: 25.5px;
+        width: 100% !important;
+    }
+
+    .sp {
+        width: 100% !important;
+    }
+
+}

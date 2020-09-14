@@ -1,0 +1,28 @@
+.form {
+    overflow-y: scroll;
+}
+
+::v-deep .ant-form {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: wrap;
+
+    .ant-form-item {
+        width: 50% !important;
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 5px;
+    }
+
+    .blockRow {
+        // position: absolute;
+        // left: 10px;
+        padding-left: 25.5px;
+        width: 100% !important;
+    }
+
+    .sp {
+        width: 100% !important;
+    }
+}

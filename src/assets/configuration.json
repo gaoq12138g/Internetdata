@@ -1,0 +1,8 @@
+{
+    "index":0,
+    "configs":[{
+        "dataService": "http://fangcuntu.oicp.net:53002/report/"
+    },{
+        "dataService": ""
+    }]
+}
