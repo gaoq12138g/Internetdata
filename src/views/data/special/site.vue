@@ -2,6 +2,9 @@
     <div class="content">
         <div class="querybar">
             <a-form layout="inline" :form="condition">
+                <!-- <a-form-item label="报送时间：">
+                    <a-range-picker v-model="condition.range" />
+                </a-form-item>-->
                 <a-form-item label="场所场地：">
                     <a-input allow-clear="allow-clear" v-model="condition.场所场地" />
                 </a-form-item>
@@ -239,7 +242,7 @@ export default {
         },
 
         handleOk(e) {
-            // console.log(e);
+            console.log(e);
             this.visible = false;
             this.query();
         },

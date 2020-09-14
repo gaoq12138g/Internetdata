@@ -97,8 +97,10 @@
 // 导入国际化--中文
 import zhCN from "ant-design-vue/lib/locale-provider/zh_CN";
 
-import memberForm from "@/components/member/memberForm.vue";
-import memberdetail from "@/components/member/memberdetail.vue";
+// import memberForm from "@/components/member/memberForm.vue";
+// import memberdetail from "@/components/member/memberdetail.vue";
+import memberForm from '@/components/member/memberForm.vue'
+import memberdetail from '@/components/member/memberdetail.vue'
 import moment from "moment";
 import "moment/locale/zh-cn";
 import { Modal } from "ant-design-vue";

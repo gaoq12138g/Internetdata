@@ -125,7 +125,7 @@ export default {
     },
     methods: {
         closeModal() {
-            this.$root.$emit("updataCLoseObjectElement", "close关闭modal");
+            this.$root.$emit("updataCLose", "close关闭modal");
         },
     },
     mounted() {

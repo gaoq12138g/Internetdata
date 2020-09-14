@@ -233,7 +233,7 @@ export default {
         },
 
         handleOk(e) {
-            // console.log(e);
+            console.log(e);
             this.visible = false;
             this.query();
         },

@@ -1,4 +1,3 @@
-
 <template>
     <div class="content">
         <div class="querybar">
@@ -25,8 +24,8 @@
         </div>
         <div class="dataTable">
             <a-table :columns="columns" :data-source="listData" :rowKey="(record,index)=>{return index}" :pagination="pagination" :rowClassName="rowClassName" :scroll="{y:800}">
-                <!-- <span slot="xb" slot-scope="xb">{{ xb | dictionary('性别') }}</span>
-                <span slot="cyzslx" slot-scope="cyzslx">{{ cyzslx | dictionary('从业证书类型') }}</span>-->
+                <span slot="xb" slot-scope="xb">{{ xb | dictionary('性别') }}</span>
+                <span slot="cyzslx" slot-scope="cyzslx">{{ cyzslx | dictionary('从业证书类型') }}</span>
                 <span slot="action" slot-scope="text,record,index">
                     <a-button type="link" @click="detailForce(record)">查看</a-button>
                     <a-button type="link" @click="updateForce(record)">修改</a-button>
@@ -36,8 +35,8 @@
         </div>
         <!-- 新增 -->
         <a-modal v-model="modalVisible" :title="title" :body-style="modalStyle" width="1100px" centered :footer="null" :maskClosable="false" :afterClose="queryListData">
-            <detailLegalPerson :form="selectedItem" v-if="title == '查看'"></detailLegalPerson>
-            <legalPersonForm :item="selectedItem" :type="title" v-if="title == '新增' && modalVisible || title == '修改' && modalVisible"></legalPersonForm>
+            <detailNaturePersonForm :form="selectedItem" v-if="title == '查看'"></detailNaturePersonForm>
+            <naturePersonForm :item="selectedItem" :type="title" v-if="title == '新增' && modalVisible || title == '修改' && modalVisible"></naturePersonForm>
         </a-modal>
         <!-- 上传 -->
         <a-modal v-model="popVisible" title="导入" :body-style="modalUploadStyle" width="800px" centered :footer="null" :maskClosable="false" @ok="() => (popVisible = false)">
@@ -52,10 +51,8 @@
 </template>
 
 <script>
-// import naturePersonForm from '@/components/object/nature-person/naturePersonForm.vue'
-// import detailNaturePersonForm from '@/components/object/nature-person/detailNaturePersonForm.vue'
-import detailLegalPerson from "@/components/object/legal-person/detailLegalPerson.vue";
-import legalPersonForm from "@/components/object/legal-person/legalPersonForm.vue";
+import naturePersonForm from '@/components/object/nature-person/naturePersonForm.vue'
+import detailNaturePersonForm from '@/components/object/nature-person/detailNaturePersonForm.vue'
 import { Modal } from "ant-design-vue";
 import moment from "moment";
 import "moment/locale/zh-cn";
@@ -64,8 +61,8 @@ import { importExcel } from "../../js/import.js"; //引入导入文件
 import verify from "../../js/verify.js"; //引入行政检查文件
 export default {
     components: {
-        legalPersonForm,
-        detailLegalPerson,
+        naturePersonForm,
+        detailNaturePersonForm,
     },
     computed: {
         dicFilter() {
@@ -116,24 +113,30 @@ export default {
                     key: "xzxdrmc",
                 },
                 {
-                    title: "行政相对人编码",
-                    key: "xzxdrbm",
-                    dataIndex: "行政相对人编码",
-                },
-                {
-                    title: "法人名称",
-                    key: "frmc",
-                    dataIndex: "法人名称",
-                },
-                {
-                    title: "法定代表人编码",
-                    key: "fddbrbm",
-                    dataIndex: "法定代表人编码",
-                },
-                {
                     title: "联系电话",
                     key: "lxdh",
                     dataIndex: "联系电话",
+                },
+                {
+                    title: "性别",
+                    key: "xb",
+                    dataIndex: "性别",
+                     scopedSlots: {
+                        customRender: "xb",
+                    },
+                },
+                {
+                    title: "从业证书类型",
+                    key: "cyzslx",
+                    dataIndex: "从业证书类型",
+                    scopedSlots: {
+                        customRender: "cyzslx",
+                    },
+                },
+                {
+                    title: "从业证书名称",
+                    key: "cyzsmc",
+                    dataIndex: "从业证书名称",
                     // 按时间排序
                     // sorter: (a, b) => Date.parse(a.bssj) - Date.parse(b.bssj),
                 },
@@ -183,7 +186,7 @@ export default {
         //查询
         queryListData() {
             this.axios
-                .post("object/organization/query", this.condition)
+                .post("object/person/query", this.condition)
                 .then((res) => {
                     console.log(res);
                     if (res.data.code == 200) {
@@ -196,7 +199,7 @@ export default {
 
         // 新增关闭弹窗
         closeModalVisible() {
-            this.$root.$on("closeModalVisibleLegalPerson", (msg) => {
+            this.$root.$on("closeModalVisiblePerson", (msg) => {
                 // console.log(msg);
                 // this.forceList = msg;
                 this.modalVisible = false;
@@ -232,11 +235,8 @@ export default {
                 dataList.splice(index, 1);
                 _this.importData = dataList;
                 console.log("_this.importData", _this.importData);
-                for (let i = 0; i < _this.importData.length; i++) {
-                    _this.importData[i].经营地址 = _this.importData[i].企业经营地址;
-                }
                 // return this.importData;
-                let result = verify.verify(_this.importData, "社会团体法人");
+                let result = verify.verify(_this.importData, "特定自然人");
                 console.log("result", result);
                 if (result.pass) {
                     _this.uploading = false;
@@ -250,7 +250,7 @@ export default {
         handleUpload() {
             const { importData } = this;
             this.axios
-                .post("object/organization/insert", this.importData)
+                .post("object/person/insert", this.importData)
                 .then((res) => {
                     if (res.data.code == 200) {
                         this.$message.success("新增成功");
@@ -294,7 +294,7 @@ export default {
                 cancelText: "取消",
                 onOk() {
                     _this.axios
-                        .get("object/organization/delete/" + item.id)
+                        .get("object/person/delete/" + item.id)
                         .then((res) => {
                             console.log(res);
                             if (res.data.code == 200) {

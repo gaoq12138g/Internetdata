@@ -176,7 +176,7 @@ export default {
                     },
                     {
                         min: 18,
-                        max: 18,
+                        max:18,
                         pattern: [global.expression.社会统一信用代码],
                         message: "请填写正确的统一社会信用代码",
                     },
@@ -340,8 +340,8 @@ export default {
     },
     mounted() {
         this.form = this.item;
-        this.form.发证日期 = moment(this.form.发证日期).format("YYYY-MM-DD");
-        this.form.有效期至 = moment(this.form.有效期至).format("YYYY-MM-DD");
+        // this.form.发证日期 = moment(this.form.发证日期).format("YYYY-MM-DD");
+        // this.form.有效期至 = moment(this.form.有效期至).format("YYYY-MM-DD");
     },
 };
 </script>

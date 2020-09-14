@@ -11,9 +11,6 @@ export default new Vuex.Store({
         currentUser: {},
         dictionary: [],
         menu: [{
-            id: 'matter',
-            title: '监管事项'
-        }, {
             id: 'object',
             title: '监管对象',
             children: [{

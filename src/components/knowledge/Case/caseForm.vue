@@ -38,7 +38,6 @@
                 <a-textarea v-model="form.结论" :rows="2" />
             </a-form-model-item>
             <a-form-model-item label="发布日期" prop="发布日期">
-                <!-- <a-input v-model="form.发布日期" /> -->
                 <a-date-picker v-model="form.发布日期" type="date" placeholder="请选择发布日期" style="width: 100%;" />
             </a-form-model-item>
         </a-form-model>
@@ -270,13 +269,7 @@ export default {
         closeModalVisible() {
             this.$root.$emit("closeModalVisibleCase", "false");
         },
-        // 新增点击×后清除form表单错误提示
-        clearForm() {
-            this.$root.$on("clearForm", (msg) => {
-                console.log(msg);
-                this.resetForm();
-            });
-        },
+
         resetForm() {
             // this.$refs.ruleForm.resetFields();
             this.$nextTick(() => {
@@ -336,9 +329,7 @@ export default {
         // this.user = this.$store.state.currentUser;
         // this.form = this.item;
     },
-    beforeMount() {
-        this.clearForm();
-    },
+
 };
 </script>
 

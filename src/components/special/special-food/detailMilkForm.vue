@@ -61,7 +61,7 @@ export default {
     },
     methods: {
         closeModal() {
-            this.$root.$emit("updataCLoseMilk", "close关闭modal");
+            this.$root.$emit("updataCLoseInstrument", "close关闭modal");
         },
     },
     mounted() {

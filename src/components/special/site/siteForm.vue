@@ -168,7 +168,7 @@ export default {
                     },
                     {
                         min: 18,
-                        max: 18,
+                        max:18,
                         pattern: [global.expression.社会统一信用代码],
                         message: "请填写正确的社会统一信用代码",
                         trigger: "blur",
@@ -235,6 +235,10 @@ export default {
                         required: true,
                         message: "请选择投入使用开始时间",
                     },
+                    // {
+                    //     min: 1,
+                    //     message: "请选择投入使用开始时间",
+                    // },
                 ],
                 使用寿命: [
                     {

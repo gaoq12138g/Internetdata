@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import Home from '../views/Home.vue'
 import Error from '../views/Error.vue'
+import Upload from '../views/Upload.vue'
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,11 @@ const routes = [
         path: '*',
         name: 'Error',
         component: Error
+    },
+    {
+        path: '/upload',
+        name: 'Upload',
+        component: Upload
     },
     {
         path: '/home',
@@ -54,27 +60,8 @@ const routes = [
                     main: () => import('../views/data/action/Other.vue')
                 }
             },
-        ]
-    },
-    {
-        path: "/base",
-        name: "Base",
-        component: Home,
-        children: [
-            {
-                path: "/self-employed",
-                name: "SelfEmployed",
-                components: {
-                    main: () => import("../views/data/object/self-employed.vue")
-                }
-            },
-            {
-                path: "/legal-person",
-                name: "Legal-person",
-                components: {
-                    main: () => import("../views/data/object/legal-person.vue")
-                }
-            }
+
+
         ]
     },
     {
@@ -136,15 +123,53 @@ const routes = [
                     main: () => import('../views/data/special/production/special-food.vue')
                 }
             },
+            {
+                path: '/member',
+                name: 'Member',
+                components: {
+                    default: Home,
+                    main: () => import('../views/data/member/member.vue')
+                }
+            },
         ]
     },
     {
-        path: '/member',
-        name: 'Member',
-        component: {
-            default: Home,
-            main: () => import("../views/data/member/member.vue")
-        },
+        path: "/base",
+        name: "Base",
+        component: Home,
+        children: [
+            {
+                path: '/enterprise',
+                name: 'Enterprise',
+                components: {
+                    default: Home,
+                    main: () => import('../views/data/object/Enterprise.vue')
+                }
+            },
+            {
+                path: "/self-employed",
+                name: "SelfEmployed",
+                components: {
+                    main: () => import("../views/data/object/self-employed.vue")
+                }
+            },
+            {
+                path: '/nature-person',
+                name: 'Nature-person',
+                components: {
+                    default: Home,
+                    main: () => import('../views/data/object/nature-person.vue')
+                }
+            },
+            {
+                path: '/legal-person',
+                name: 'Legal-person',
+                components: {
+                    default: Home,
+                    main: () => import('../views/data/object/legal-person.vue')
+                }
+            },
+        ]
     },
     {
         path: '/knowledge',
@@ -190,6 +215,45 @@ const routes = [
                 components: {
                     default: Home,
                     main: () => import('../views/data/knowledge/rule.vue')
+                }
+            },
+        ]
+    },
+    {
+        path: '/random',
+        name: 'Random',
+        component: Home,
+        children: [
+            {
+                path: '/special-plan',
+                name: 'Special-plan',
+                components: {
+                    default: Home,
+                    main: () => import('../views/data/random/specialProgram.vue')
+                }
+            },
+            {
+                path: '/special-spot-check',
+                name: 'Special-spot-check',
+                components: {
+                    default: Home,
+                    main: () => import('../views/data/random/specialCheck.vue')
+                }
+            },
+            {
+                path: '/annual-plan',
+                name: 'Annual-plan',
+                components: {
+                    default: Home,
+                    main: () => import('../views/data/random/annualProgram.vue')
+                }
+            },
+            {
+                path: '/annual-spot-check',
+                name: 'Annual-spot-check',
+                components: {
+                    default: Home,
+                    main: () => import('../views/data/random/annualCheck.vue')
                 }
             },
         ]

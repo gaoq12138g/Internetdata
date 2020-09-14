@@ -81,7 +81,7 @@ export default {
                     },
                     {
                         min: 18,
-                        max: 18,
+                        max:18,
                         pattern: [global.expression.社会统一信用代码],
                         message: "请填写正确的社会统一信用代码",
                         trigger: "blur",
@@ -163,27 +163,16 @@ export default {
     },
     methods: {
         onSubmit() {
-            console.log("submit");
-
             this.$refs.ruleForm.validate((valid) => {
-                this.form.批准日期 = moment(this.form.批准日期).format(
-                    "YYYY-MM-DD"
-                );
-                this.form.有效期至 = moment(this.form.有效期至).format(
-                    "YYYY-MM-DD"
-                );
-
-                // console.log(this.form.投入使用开始时间);
                 this.data = [this.form];
-                console.log(this.data); //12320100425800919F
-
+                // console.log(this.data); //12320100425800919F
                 if (valid) {
-                    console.log("新增医疗器械!");
+                    console.log("新增奶粉!");
                     if (this.types == "new") {
-                        console.log("新增");
+                        // console.log("新增");
                         this.add();
                     } else if (this.types == "modify") {
-                        console.log("修改");
+                        // console.log("修改");
                         this.update();
                     }
                 } else {

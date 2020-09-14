@@ -2,6 +2,9 @@
     <div class="content">
         <div class="querybar">
             <a-form layout="inline" :form="condition">
+                <!-- <a-form-item label="报送时间：">
+                    <a-range-picker v-model="condition.range" />
+                </a-form-item>-->
                 <a-form-item label="产品名称：">
                     <a-input allow-clear="allow-clear" v-model="condition.产品名称" />
                 </a-form-item>
@@ -224,7 +227,7 @@ export default {
         },
 
         handleOk(e) {
-            // console.log(e);
+            console.log(e);
             this.visible = false;
             this.query();
         },
@@ -361,7 +364,9 @@ export default {
     mounted() {
         var height = document.body.clientHeight;
         this.modalStyle.height = height * 0.7 + "px";
-
+        // if(this.types == "detail") {
+        //     this.modalStyle.height = height * 0.5 + "px";
+        // }
         this.modalUploadStyle.height = height * 0.3 + "px";
 
         this.query();

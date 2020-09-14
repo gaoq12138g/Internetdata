@@ -2,6 +2,9 @@
     <div class="content">
         <div class="querybar">
             <a-form layout="inline" :form="condition">
+                <!-- <a-form-item label="报送时间：">
+                    <a-range-picker v-model="condition.range" />
+                </a-form-item>-->
                 <a-form-item label="产品名称：">
                     <a-input allow-clear="allow-clear" v-model="condition.产品名称" />
                 </a-form-item>
@@ -26,6 +29,7 @@
             <a-table
                 :columns="checkColumn"
                 :data-source="data"
+                centered
                 :rowKey="(record,index)=>{return index}"
                 :pagination="pagination"
                 :scroll="{ y: 800 }"
@@ -231,7 +235,7 @@ export default {
         },
 
         handleOk(e) {
-            // console.log(e);
+            console.log(e);
             this.visible = false;
             this.query();
         },

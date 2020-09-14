@@ -113,7 +113,7 @@ export default {
                     // },
                     {
                         min: 18,
-                        max: 18,
+                        max:18,
                         pattern: [global.expression.社会统一信用代码],
                         message: "请填写正确的社会统一信用代码",
                         trigger: "blur",
@@ -306,6 +306,7 @@ export default {
     },
     mounted() {
         this.form = this.item;
+        // this.form.批准日期 = moment(this.form.批准日期).format("YYYY-MM-DD");
     },
 };
 </script>

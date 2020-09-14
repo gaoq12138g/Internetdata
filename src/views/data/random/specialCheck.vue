@@ -1,16 +1,23 @@
-
 <template>
     <div class="content">
         <div class="querybar">
             <a-form layout="inline" :form="condition">
-                <a-form-item label="名称">
-                    <a-input allow-clear="allow-clear" v-model="condition.名称" />
+                <a-form-item label="地区行政编码">
+                    <a-select v-model="condition.地区行政编码" placeholder="请选择地区行政编码" style="width: 150px">
+                        <a-select-option value="000000">全国</a-select-option>
+                        <a-select-option v-for="(item, index) in dicFilter('行政区划代码')" :key="index" :value="item.编号">{{ item.值 }}</a-select-option>
+                    </a-select>
                 </a-form-item>
-                <a-form-item label="类型">
-                    <a-input allow-clear="allow-clear" v-model="condition.类型" />
+                <a-form-item label="年度">
+                    <a-date-picker mode="year" placeholder="请选择年份" v-model="condition.年度" format="YYYY" :open="yearPickShow" @panelChange="handlePanelChange" @openChange="handleOpenChange" />
                 </a-form-item>
-                <a-form-item label="统一社会信用代码">
-                    <a-input allow-clear="allow-clear" v-model="condition.统一社会信用代码" />
+                <a-form-item label="监管部门">
+                    <a-select v-model="condition.监管部门" placeholder="请选择监管部门" style="width: 250px">
+                        <a-select-option v-for="(item, index) in dicFilter('江苏省监管部门代码')" :key="index" :value="item.编号">{{ item.值 }}</a-select-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item label="计划名称">
+                    <a-input allow-clear="allow-clear" v-model="condition.计划名称" />
                 </a-form-item>
                 <a-form-item>
                     <a-button type="primary" @click="queryListData">查询</a-button>
@@ -25,8 +32,6 @@
         </div>
         <div class="dataTable">
             <a-table :columns="columns" :data-source="listData" :rowKey="(record,index)=>{return index}" :pagination="pagination" :rowClassName="rowClassName" :scroll="{y:800}">
-                <!-- <span slot="xb" slot-scope="xb">{{ xb | dictionary('性别') }}</span>
-                <span slot="cyzslx" slot-scope="cyzslx">{{ cyzslx | dictionary('从业证书类型') }}</span>-->
                 <span slot="action" slot-scope="text,record,index">
                     <a-button type="link" @click="detailForce(record)">查看</a-button>
                     <a-button type="link" @click="updateForce(record)">修改</a-button>
@@ -36,8 +41,8 @@
         </div>
         <!-- 新增 -->
         <a-modal v-model="modalVisible" :title="title" :body-style="modalStyle" width="1100px" centered :footer="null" :maskClosable="false" :afterClose="queryListData">
-            <detailLegalPerson :form="selectedItem" v-if="title == '查看'"></detailLegalPerson>
-            <legalPersonForm :item="selectedItem" :type="title" v-if="title == '新增' && modalVisible || title == '修改' && modalVisible"></legalPersonForm>
+            <detailSpecialCheckForm :form="selectedItem" v-if="title == '查看'"></detailSpecialCheckForm>
+            <specialCheckForm :item="selectedItem" :type="title" v-if="title == '新增' && modalVisible || title == '修改' && modalVisible"></specialCheckForm>
         </a-modal>
         <!-- 上传 -->
         <a-modal v-model="popVisible" title="导入" :body-style="modalUploadStyle" width="800px" centered :footer="null" :maskClosable="false" @ok="() => (popVisible = false)">
@@ -52,10 +57,8 @@
 </template>
 
 <script>
-// import naturePersonForm from '@/components/object/nature-person/naturePersonForm.vue'
-// import detailNaturePersonForm from '@/components/object/nature-person/detailNaturePersonForm.vue'
-import detailLegalPerson from "@/components/object/legal-person/detailLegalPerson.vue";
-import legalPersonForm from "@/components/object/legal-person/legalPersonForm.vue";
+import specialCheckForm from '@/components/random/specialCheck/specialCheckForm.vue'
+import detailSpecialCheckForm from '@/components/random/specialCheck/detailSpecialCheckForm.vue'
 import { Modal } from "ant-design-vue";
 import moment from "moment";
 import "moment/locale/zh-cn";
@@ -64,8 +67,8 @@ import { importExcel } from "../../js/import.js"; //引入导入文件
 import verify from "../../js/verify.js"; //引入行政检查文件
 export default {
     components: {
-        legalPersonForm,
-        detailLegalPerson,
+        specialCheckForm,
+        detailSpecialCheckForm,
     },
     computed: {
         dicFilter() {
@@ -84,23 +87,15 @@ export default {
             user: (state) => state.currentUser,
         }),
     },
-    filters: {
-        addPercent(target) {
-            if (target.indexOf("%") == -1) {
-                target = Math.round(target * 10000) / 100.0 + "%";
-                return target;
-            } else {
-                return target;
-            }
-        },
-    },
     data() {
         return {
             condition: {
-                名称: null,
-                类型: null,
-                统一社会信用代码: null,
+                地区行政编码: null,
+                年度: null,
+                监管部门: null,
+                计划名称: null,
             },
+            yearPickShow: false, //年选择器的显示隐藏
             // 表格头
             columns: [
                 {
@@ -110,32 +105,26 @@ export default {
                         `${(this.current - 1) * this.pagesize + (index + 1)}`,
                 },
                 {
-                    title: "行政相对人名称",
-                    // width: "40%",
-                    dataIndex: "行政相对人名称",
-                    key: "xzxdrmc",
+                    title: "抽查检查对象名称",
+                    width: "40%",
+                    dataIndex: "抽查检查对象名称",
+                    key: "ccjcdxmc",
                 },
                 {
-                    title: "行政相对人编码",
-                    key: "xzxdrbm",
-                    dataIndex: "行政相对人编码",
+                    title: "抽查检查对象 ID",
+                    key: "ccjcdxid",
+                    dataIndex: "抽查检查对象 ID",
                 },
                 {
-                    title: "法人名称",
-                    key: "frmc",
-                    dataIndex: "法人名称",
+                    title: "计划ID",
+                    key: "jhid",
+                    dataIndex: "计划ID",
                 },
                 {
-                    title: "法定代表人编码",
-                    key: "fddbrbm",
-                    dataIndex: "法定代表人编码",
-                },
-                {
-                    title: "联系电话",
-                    key: "lxdh",
-                    dataIndex: "联系电话",
-                    // 按时间排序
-                    // sorter: (a, b) => Date.parse(a.bssj) - Date.parse(b.bssj),
+                    title: "抽查检查对象统一社会信用代码",
+                    key: "ccjcdxtyshxydm",
+                    width: "15%",
+                    dataIndex: "抽查检查对象统一社会信用代码",
                 },
                 {
                     title: "操作",
@@ -183,7 +172,7 @@ export default {
         //查询
         queryListData() {
             this.axios
-                .post("object/organization/query", this.condition)
+                .post("random/specialCheck/query", this.condition)
                 .then((res) => {
                     console.log(res);
                     if (res.data.code == 200) {
@@ -196,7 +185,7 @@ export default {
 
         // 新增关闭弹窗
         closeModalVisible() {
-            this.$root.$on("closeModalVisibleLegalPerson", (msg) => {
+            this.$root.$on("closeModalVisibleSpecialCheck", (msg) => {
                 // console.log(msg);
                 // this.forceList = msg;
                 this.modalVisible = false;
@@ -231,12 +220,18 @@ export default {
                 dataList = data.slice();
                 dataList.splice(index, 1);
                 _this.importData = dataList;
+
                 console.log("_this.importData", _this.importData);
                 for (let i = 0; i < _this.importData.length; i++) {
-                    _this.importData[i].经营地址 = _this.importData[i].企业经营地址;
+                    console.log(_this.importData[i].抽查检查对象ID);
+                    _this.importData[i]["抽查检查对象" + " " + "ID"] =
+                        _this.importData[i].抽查检查对象ID;
                 }
                 // return this.importData;
-                let result = verify.verify(_this.importData, "社会团体法人");
+                let result = verify.verify(
+                    _this.importData,
+                    "双随机抽查的监管对象"
+                );
                 console.log("result", result);
                 if (result.pass) {
                     _this.uploading = false;
@@ -250,7 +245,7 @@ export default {
         handleUpload() {
             const { importData } = this;
             this.axios
-                .post("object/organization/insert", this.importData)
+                .post("random/specialCheck/insert", this.importData)
                 .then((res) => {
                     if (res.data.code == 200) {
                         this.$message.success("新增成功");
@@ -294,7 +289,7 @@ export default {
                 cancelText: "取消",
                 onOk() {
                     _this.axios
-                        .get("object/organization/delete/" + item.id)
+                        .get("random/specialCheck/delete/" + item.id)
                         .then((res) => {
                             console.log(res);
                             if (res.data.code == 200) {
@@ -315,6 +310,15 @@ export default {
         onChange(pageNumber) {
             console.log("Page: ", pageNumber);
         },
+        handleOpenChange(status) {
+            this.yearPickShow = status;
+        },
+        // 得到年份选择器的值
+        handlePanelChange(value) {
+            console.log(value);
+            this.condition.年度 = moment(value).format("YYYY");
+            this.yearPickShow = false;
+        },
 
         // 给table添加className
         rowClassName(record, index) {
@@ -325,7 +329,7 @@ export default {
     mounted() {
         var height = document.body.clientHeight;
         // 新增修改的弹窗高度
-        this.modalStyle.height = height * 0.7 + "px";
+        this.modalStyle.height = height * 0.4 + "px";
         // 导入的弹窗高度
         this.modalUploadStyle.height = height * 0.3 + "px";
         var myDate = new Date(); //获取系统当前时间

@@ -5,25 +5,25 @@ export default {
     typeName: '',
     message: [],
     rules: [],
-    verify(list, type) {
+    verify(list, type){
         this.message = [];
         this.factory(type);
         var len = list.length, pass = 0, fail = 0;
         for (var i = 0; i < len; i++) {
             this.message.push("校验第" + (i + 1) + "条数据");
             let valid = this.isValid(list[i]);
-            if (valid) pass++;
+            if(valid) pass++;
             else fail++;
         }
-        let percent = len == 0 ? 0 : (pass / len * 100).toFixed(2);
+        let percent = len == 0? 0: (pass / len * 100).toFixed(2);
         this.message.push("校验完成，共校验数据" + len + "条，其中" + pass + "条通过，" + fail + "条不通过，通过率" + percent + "%")
         return {
             pass: len == pass,
             message: this.message
         };
     },
-    factory(type) {
-        switch (type) {
+    factory(type){
+        switch(type){
             case '行政检查行为':
                 this.typeName = 'check_action';
                 break;
@@ -102,62 +102,62 @@ export default {
     },
     isValid(item) {
         let valid = true;
-        for (let i = 0; i < this.rules.length; i++) {
+        for(let i=0; i<this.rules.length; i++){
             let rule = this.rules[i];
-            let name = item[rule.name] ? rule.name : rule.alias;
-            if (!name) name = rule.name;
+            let name = item[rule.name]? rule.name: rule.alias;
+            if(!name) name = rule.name;
             let val = item[name];
-            if (val) val = val.toString();
-            if (this.isNull(val, rule)) {
+            if(val) val = val.toString();
+            if(this.isNull(val, rule)){
                 this.message.push('[' + name + ']' + global.message.null);
                 valid = false;
                 continue;
             }
-            if (!this.isDate(val, rule)) {
+            if(!this.isDate(val, rule)){
                 this.message.push('[' + name + ']:[' + val + ']' + global.message.date);
                 valid = false;
                 continue;
             }
-            if (!this.isArray(val, rule)) {
+            if(!this.isArray(val, rule)){
                 this.message.push('[' + name + ']:[' + val + ']' + global.message.array);
                 valid = false;
                 continue;
             }
-            if (!this.isNumber(val, rule)) {
+            if(!this.isNumber(val, rule)){
                 this.message.push('[' + name + ']:[' + val + ']' + global.message.number);
                 valid = false;
                 continue;
             }
-            if (!this.isBoolean(val, rule)) {
+            if(!this.isBoolean(val, rule)){
                 this.message.push('[' + name + ']:[' + val + ']' + global.message.dictionary);
                 valid = false;
                 continue;
             }
-            if (!this.length(val, rule)) {
+            if(!this.length(val, rule)){
                 this.message.push('[' + name + ']:[' + val + ']' + global.message.length);
                 valid = false;
                 continue;
             }
-            if (!this.maxLength(val, rule)) {
+            if(!this.maxLength(val, rule)){
                 this.message.push('[' + name + ']:[' + val + ']' + global.message.maxlength);
                 valid = false;
                 continue;
             }
-            if (!this.regExp(val, rule)) {
+            if(!this.regExp(val, rule)){
                 this.message.push('[' + name + ']:[' + val + ']' + global.message.verify);
                 valid = false;
                 continue;
             }
-            if (!this.dictionary(val, rule)) {
+            if(!this.dictionary(val, rule)){
                 this.message.push('[' + name + ']:[' + val + ']' + global.message.dictionary);
                 valid = false;
                 continue;
             }
-            if (rule.funcName) {
+            if(rule.funcName){
                 let tn = require('./' + this.typeName);
                 let func = tn.default[rule.funcName];
                 let res = func(item);
-                if (!res.pass) {
+                if(!res.pass){
                     this.message.push('[' + name + ']:[' + val + ']' + res.message);
                     valid = false;
                     continue;
@@ -166,90 +166,90 @@ export default {
         }
         return valid;
     },
-    isNull(val, rule) {
-        if (!rule.null)
+    isNull(val, rule){
+        if(!rule.null)
             return val == null || val == undefined || val.toString().trim().length == 0;
         else
             return false;
     },
-    isBoolean(val, rule) {
+    isBoolean(val, rule){
         let pass = true;
-        if (!rule.null || (rule.null && val != null && val != undefined && isNaN(val))) {
-            if (rule.type && rule.type == 'Boolean') {
-                if (val != '是' && val != '否')
+        if(!rule.null || (rule.null && val != null && val != undefined && isNaN(val))){
+            if(rule.type && rule.type == 'Boolean'){
+                if(val != '是' && val != '否')
                     pass = false;
             }
         }
         return pass;
     },
-    isDate(val, rule) {
+    isDate(val, rule){
         let pass = true;
-        if (!rule.null || (rule.null && val != null && val != undefined && val.length > 0)) {
-            if (rule.type && rule.type == 'Date') {
-                if (val.toString().length != 10)
+        if(!rule.null || (rule.null && val != null && val != undefined && val.length > 0)){
+            if(rule.type && rule.type == 'Date'){
+                if(val.toString().length != 10)
                     pass = false;
                 let reg = new RegExp(global.日期格式);
-                if (!reg.test(val.toString()))
+                if(!reg.test(val.toString()))
                     pass = false;
             }
         }
         return pass;
     },
-    isArray(val, rule) {
+    isArray(val, rule){
         let pass = true;
-        if (!rule.null || (rule.null && val != null && val != undefined && val.length > 0)) {
-            if (rule.type && rule.type == 'Array') {
-                if (val.toString().split(',').length < 2)
+        if(!rule.null || (rule.null && val != null && val != undefined && val.length > 0)){
+            if(rule.type && rule.type == 'Array'){
+                if(val.toString().split(',').length < 2)
                     pass = false;
             }
         }
         return pass;
     },
-    isNumber(val, rule) {
+    isNumber(val, rule){
         let pass = true;
-        if (!rule.null || (rule.null && val != null && val != undefined && isNaN(val))) {
-            if (rule.type && rule.type == 'Number')
+        if(!rule.null || (rule.null && val != null && val != undefined && isNaN(val))){
+            if(rule.type && rule.type == 'Number')
                 pass = parseFloat(inputData).toString() == "NaN";
         }
         return pass;
     },
-    length(val, rule) {
+    length(val, rule){
         let pass = true;
-        if (!rule.null || (rule.null && val != null && val != undefined && val.length > 0)) {
-            if (rule.length && val.length != rule.length)
+        if(!rule.null || (rule.null && val != null && val != undefined && val.length > 0)){
+            if(rule.length && val.length != rule.length)
                 pass = false;
         }
         return pass;
     },
-    maxLength(val, rule) {
+    maxLength(val, rule){
         let pass = true;
-        if (!rule.null || (rule.null && val != null && val != undefined && val.length > 0)) {
-            if (rule.maxlength && val.length > rule.maxlength)
+        if(!rule.null || (rule.null && val != null && val != undefined && val.length > 0)){
+            if(rule.maxlength && val.length > rule.maxlength)
                 pass = false;
         }
         return pass;
     },
-    regExp(val, rule) {
+    regExp(val, rule){
         let res = true;
-        if (!rule.null || (rule.null && val != null && val != undefined && val.length > 0)) {
-            if (rule.expression) {
+        if(!rule.null || (rule.null && val != null && val != undefined && val.length > 0)){
+            if(rule.expression){
                 var pass = false;
-                for (var j = 0; j < rule.expression.length; j++) {
+                for(var j=0; j<rule.expression.length; j++){
                     let reg = new RegExp(rule.expression[j]);
                     pass = reg.test(val);
-                    if (pass) break;
+                    if(pass) break;
                 }
-                if (!pass) res = false;
+                if(!pass) res = false;
             }
         }
         return res;
     },
-    dictionary(val, rule) {
+    dictionary(val, rule){
         let pass = true;
-        if (!rule.null || (rule.null && val != null && val != undefined && val.length > 0)) {
-            if (rule.dictionary) {
+        if(!rule.null || (rule.null && val != null && val != undefined && val.length > 0)){
+            if(rule.dictionary){
                 let Enumerable = require('./linq');
-                let count = Enumerable.from(dictionary).count(dic => dic.类型名称 == rule.dictionary && dic.编号 == val);
+                let count = Enumerable.from(dictionary).count(dic=> dic.类型名称 == rule.dictionary && dic.编号 == val);
                 pass = count > 0;
             }
         }

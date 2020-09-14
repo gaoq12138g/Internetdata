@@ -9,11 +9,7 @@
                     <a-input allow-clear="allow-clear" v-model="condition.企业名称" />
                 </a-form-item>
                 <a-form-item label="统一社会信用代码：">
-                    <a-input
-                        allow-clear="allow-clear"
-                        @blur="rulesIDcard"
-                        v-model="condition.统一社会信用代码"
-                    />
+                    <a-input allow-clear="allow-clear" v-model="condition.统一社会信用代码" />
                 </a-form-item>
                 <a-form-item>
                     <a-button type="primary" @click="query">查询</a-button>
@@ -102,7 +98,6 @@ import { Modal } from "ant-design-vue";
 import { mapState } from "vuex";
 import { importExcel } from "../../../js/import.js"; //引入导入文件
 import verify from "../../../js/verify.js"; //引入行政处罚文件
-import global from "@/views/js/global.js";
 
 export default {
     components: {
@@ -143,7 +138,6 @@ export default {
             types: "",
             visible: false,
             title: "新增",
-            global,
 
             // 国际化-中文
             locale: zhCN,
@@ -230,22 +224,8 @@ export default {
             return className;
         },
 
-        // 检验社会统一信用代码
-        rulesIDcard() {
-            this.condition.统一社会信用代码;
-            let reg = global.expression.社会统一信用代码;
-            let regB = global.expression.身份证号;
-            if (
-                reg.test(this.condition.统一社会信用代码) == false ||
-
-                regB.test(this.condition.统一社会信用代码) == false
-            ) {
-                this.$message.error("请输入正确的统一社会信用代码");
-                this.condition.统一社会信用代码 = "";
-            }
-        },
         handleOk(e) {
-            // console.log(e);
+            console.log(e);
             this.visible = false;
             this.query();
         },

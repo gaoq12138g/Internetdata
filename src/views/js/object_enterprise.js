@@ -25,7 +25,7 @@ export default {
         {
             name: '行业类别',
             null: true,
-            dictionary: '行业类别'
+            dictionary: '行业类型'
         },
         {
             name: '组织类别',

@@ -293,7 +293,7 @@ export default {
             this.axios.get("action/punish/delete/" + id).then((res) => {
                 console.log(res);
                 if ((res.data.code = 200)) {
-                    this.$message.error("删除成功");
+                    this.$message.success("删除成功");
                     this.queryXZCFXW();
                 } else {
                     this.$message.error("删除失败");

@@ -508,10 +508,10 @@ export default {
     },
     mounted() {
         this.form = this.item;
-        this.form.出生日期 = moment(this.form.出生日期).format("YYYY-MM-DD");
-        this.form.证件有效期 = moment(this.form.证件有效期).format(
-            "YYYY-MM-DD"
-        );
+        // this.form.出生日期 = moment(this.form.出生日期).format("YYYY-MM-DD");
+        // this.form.证件有效期 = moment(this.form.证件有效期).format(
+        //     "YYYY-MM-DD"
+        // );
     },
 };
 </script>

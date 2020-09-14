@@ -112,7 +112,7 @@ export default {
     },
     methods: {
         closeModal() {
-            this.$root.$emit("updataCLoseSite", "close关闭modal");
+            this.$root.$emit("updataCLose", "close关闭modal");
         },
     },
     mounted() {
