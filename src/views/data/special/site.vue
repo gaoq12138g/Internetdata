@@ -283,9 +283,9 @@ export default {
             this.$confirm({
                 title: "你确定要删除这条信息吗?",
                 // content: "Some descriptions",
-                okText: "Yes",
+                okText: "确定",
                 okType: "danger",
-                cancelText: "No",
+                cancelText: "取消",
                 onOk() {
                     console.log("OK");
                     deletelist(id);
